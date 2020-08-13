@@ -4,11 +4,28 @@ class TextBaduk {
 	public static void main(String[] args) {
 		char[] point = new char[100]; 
 		Board.clear(point);
-		Board.place(point, '0', 6, 7);
 		Board.print(point);
 
 	}
 }
+
+class Stone {
+	
+	public static void create(char[] point, char player, int x, int y) {
+		Board.place(point,player,x,y);
+		int[][] lib = {{x-1,y},{x+1,y},{x,y-1},{x,y+1}};
+
+		if (point[lib[0][0] + (lib[0][1] * 10)] == 'O')
+			System.out.printf("Print1");
+		if (point[lib[1][0] + (lib[1][1] * 10)] == 'O')
+			System.out.printf("Print2");
+		if (point[lib[2][0] + (lib[2][1] * 10)] == 'O')
+			System.out.printf("Print3");
+		if (point[lib[3][0] + (lib[3][1] * 10)] == 'O')
+			System.out.printf("Print4");
+	}
+}
+
 class Board {
 	public static void print(char[] point) {
 		int line = 0;
@@ -31,7 +48,8 @@ class Board {
 		}
 	}
 	public static void place(char[] point, char player, int x, int y) {
-		point[(x-1)+((y-1)*10)] = '0';		
+		Stone foobar = new Stone();
+		point[(x)+((y)*10)] = player;		
 	}
 	public static void clear(char[] point) {
 		Arrays.fill(point, '+');
