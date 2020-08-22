@@ -1,20 +1,42 @@
 import java.util.Arrays;
+import java.util.Scanner;
 
 class TextBaduk 
 {
 	public static void main(String[] args) 
 	{
+		Scanner scanner = new Scanner(System.in); 
+
+		int y;
+		int x;
+		char player = '0';
+
 		Stone [] point = new Stone[100]; 
 		for (int i = 0; i < 100; i++)
 		{
 			point[i] = new Stone();
 		}
 		Board.init(point);
+		while (true)
+		{
+			Board.print(point);
+	    	x = scanner.nextInt();		
+	    	y = scanner.nextInt();		
+			
+			if (point[x+y*10].character != '+')
+			{
+				if (player == '0') //Switch the player on an invalid space so it can be switched back immedialty 
+					player = 'O';
+				else
+					player = '0';
+			}
+			Board.placeStone(point,x,y,player);
 
-		Board.placeStone(point,2,5,'0');
-
-		System.out.printf(":%c:",point[4].character);
-		Board.print(point);
+			if (player == '0')
+				player = 'O';
+			else
+				player = '0';
+		}
 
 	}
 }
