@@ -9,6 +9,9 @@ class TextBaduk
 		{
 			point[i] = new Stone();
 		}
+		Board.init(point);
+
+		Board.placeStone(point,2,5,'0');
 
 		System.out.printf(":%c:",point[4].character);
 		Board.print(point);
@@ -28,9 +31,6 @@ class Stone
 
 class Board 
 {
-
-		
-
 	public static void print(Stone[] point) 
 	{
 		int line = 0;
@@ -50,6 +50,25 @@ class Board
 			}
 			if (i < 9)
 				System.out.printf("   |  |  |  |  |  |  |  |  |  |\n"); //print 9
+		}
+	}
+	public static void placeStone(Stone[] point, int x, int y, char player)
+	{
+		point[(y*10)+x].character = player;
+	}
+	public static void init(Stone[] point)
+	{
+		int line = 0;
+		int counter = 0;
+		for (int i = 0; i < 100; i++)
+		{
+			point[i].character = '+';
+			point[i].findLibs(counter,line);
+			if (counter > 9)
+			{
+				counter = 0;
+				line = line + 1;
+			}
 		}
 	}
 }
