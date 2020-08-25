@@ -6,9 +6,11 @@ class TextBaduk
 	public static void main(String[] args) 
 	{
 		Scanner scanner = new Scanner(System.in); 
-
-		int y;
-		int x;
+	
+		int y = 0;
+		int x = 0;
+		int prevy;
+		int prevx;
 		char player = '0';
 
 		Stone [] point = new Stone[100]; 
@@ -19,11 +21,13 @@ class TextBaduk
 		Board.init(point);
 		while (true)
 		{
-			Board.print(point);
+			Board.print(point, player);
+			prevx = x;
+			prevy = y;
 	    	x = scanner.nextInt();		
 	    	y = scanner.nextInt();		
 			
-			if (point[x+y*10].character != '+')
+			if (point[x+y*10].character != '+' || point[x+y*10] == point[prevx+prevy*10])
 			{
 				if (player == '0') //Switch the player on an invalid space so it can be switched back immedialty 
 					player = 'O';
@@ -53,10 +57,11 @@ class Stone
 
 class Board 
 {
-	public static void print(Stone[] point) 
+	public static void print(Stone[] point, char player) 
 	{
 		int line = 0;
 		System.out.print("\u001b[2J");
+		System.out.printf("The turn belongs to player %c\n\n",player);
 		System.out.printf("   0  1  2  3  4  5  6  7  8  9\n\n");
 		for(int i = 0; i < 10; i++)
 		{
