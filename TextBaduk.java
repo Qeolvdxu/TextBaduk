@@ -24,10 +24,13 @@ class TextBaduk
 			Board.print(point, player);
 			prevx = x;
 			prevy = y;
-	    	x = scanner.nextInt();		
-	    	y = scanner.nextInt();		
+			do		//Continue to get input until it is valid
+	    	{
+				x = scanner.nextInt();		
+	    		y = scanner.nextInt();		
+			} while(x > 99 || x < 0 || y > 99 || y < 0);
 			
-			if (point[x+y*10].character != '+' || point[x+y*10] == point[prevx+prevy*10])
+			if (point[x+y*10].character != '+' || point[x+y*10] == point[prevx+prevy*10]) //check for invalid space space
 			{
 				if (player == '0') //Switch the player on an invalid space so it can be switched back immedialty 
 					player = 'O';
@@ -49,9 +52,10 @@ class Stone
 { 
 	char character = '+';
 
-	public static void findLibs(int x,int y) 
+	public static int[][] findLibs(int x,int y) 
 	{		
 		int[][] lib = {{x-1,y},{x+1,y},{x,y-1},{x,y+1}};
+		return lib;
 	}
 }
 
@@ -97,5 +101,9 @@ class Board
 				line = line + 1;
 			}
 		}
+	}
+	public static void checkBoard(Stone[] point)
+	{
+		point[0].findLibs(1,1);
 	}
 }
