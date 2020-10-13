@@ -11,7 +11,8 @@ class TextBaduk
 		int x = 0;
 		int prevy;
 		int prevx;
-		char player = '0';
+		char[] players = {'O', '0'};
+		int player = 0;
 
 		Stone [] point = new Stone[100]; 
 		for (int i = 0; i < 100; i++)
@@ -21,28 +22,33 @@ class TextBaduk
 		Board.init(point);
 		while (true)
 		{
-			Board.print(point, player);
+			Board.print(point, players[player]);
+			System.out.printf("%d , %d = %c\n",x,y,point[x+(y*10)].character);
 			prevx = x;
 			prevy = y;
 			do		//Continue to get input until it is valid
-	    	{
+	    		{
 				x = scanner.nextInt();		
-	    		y = scanner.nextInt();		
+	    			y = scanner.nextInt();		
 			} while(x > 99 || x < 0 || y > 99 || y < 0);
 			
-			if (point[x+y*10].character != '+' || point[x+y*10] == point[prevx+prevy*10]) //check for invalid space space
+			if (point[(y*10)+x].character != '+' || point[(y*10)+x] == point[prevx+(prevy*10)]) //check for invalid space space
 			{
-				if (player == '0') //Switch the player on an invalid space so it can be switched back immedialty 
-					player = 'O';
+				System.out.printf("Invalid Space!");
+				if (player == 0) //Switch the player on an invalid space so it can be switched back immedialty 
+					player = 1;
 				else
-					player = '0';
+					player = 0;
 			}
-			Board.placeStone(point,x,y,player);
+			Board.placeStone(point,x,y,players[player]);
 
-			if (player == '0')
-				player = 'O';
+			if (player == 0)
+				player = 1;
 			else
-				player = '0';
+				player = 0;
+
+			Board.checkBoard(point);
+
 		}
 
 	}
@@ -51,12 +57,8 @@ class TextBaduk
 class Stone 
 { 
 	char character = '+';
-
-	public static int[][] findLibs(int x,int y) 
-	{		
-		int[][] lib = {{x-1,y},{x+1,y},{x,y-1},{x,y+1}};
-		return lib;
-	}
+	int x, y;
+	int[][]	libs = {{x-1,y},{x+1,y},{x,y-1},{x,y+1}};
 }
 
 class Board 
@@ -94,7 +96,9 @@ class Board
 		for (int i = 0; i < 100; i++)
 		{
 			point[i].character = '+';
-			point[i].findLibs(counter,line);
+			point[i].x = counter;
+			point[i].y = line;
+			counter++;
 			if (counter > 9)
 			{
 				counter = 0;
@@ -104,6 +108,36 @@ class Board
 	}
 	public static void checkBoard(Stone[] point)
 	{
-		point[0].findLibs(1,1);
+		int x, y, deps;
+		int[][] libs;
+		for (int j = 0; j < 100; j++)
+		{
+			deps = 0;
+			for (int i = 0; i < 4; i++)
+			{
+				x = point[j].libs[i][0];
+/*
+				y = point[j].libs[i][1];
+				System.out.printf("(%d,%d)",x,y);
+				if (x < 0 || x > 100 || y < 0 || y > 100)
+				{
+					deps++;
+				}
+				else if(point[x+y*10].character == 'O' || point[x+y*10].character == '0' )
+				{
+					deps++;
+				}
+				else
+				{
+					point[x+y*10].character = 'E';
+				}
+*/
+			}
+			if (deps > 3)
+			{
+				point[j].character = 'X';
+				deps = 0;	
+			}
+		}
 	}
 }
