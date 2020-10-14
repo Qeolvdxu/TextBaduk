@@ -57,8 +57,20 @@ class TextBaduk
 class Stone 
 { 
 	char character = '+';
-	int x, y;
-	int[][]	libs = {{x-1,y},{x+1,y},{x,y-1},{x,y+1}};
+	int x = 0, y = 0;
+	static int libs[][] = new int[4][2];
+	public static void initLibs(int xcord, int ycord)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+				libs[i][0] = xcord;
+				libs[i][1] = ycord;
+		}
+		libs[0][0]--;
+		libs[1][1]--;
+		libs[2][0]++;
+		libs[3][1]++;
+	}	
 }
 
 class Board 
@@ -66,7 +78,8 @@ class Board
 	public static void print(Stone[] point, char player) 
 	{
 		int line = 0;
-		System.out.print("\u001b[2J");
+		//System.out.print("\u001b[2J");
+		System.out.print("\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n");
 		System.out.printf("The turn belongs to player %c\n\n",player);
 		System.out.printf("   0  1  2  3  4  5  6  7  8  9\n\n");
 		for(int i = 0; i < 10; i++)
@@ -91,53 +104,38 @@ class Board
 	}
 	public static void init(Stone[] point)
 	{
-		int line = 0;
-		int counter = 0;
-		for (int i = 0; i < 100; i++)
+		for (int i = 0; i < 10; i++)
 		{
-			point[i].character = '+';
-			point[i].x = counter;
-			point[i].y = line;
-			counter++;
-			if (counter > 9)
+			for (int j = 0; j < 10; j++)
 			{
-				counter = 0;
-				line = line + 1;
+				point[j+i*10].character = '+';
+				point[j+i*10].x = j;
+				point[j+i*10].y = i;
+				System.out.printf("(%d,%d)",i,j);
+				point[j+i*10].initLibs(j,i);
 			}
 		}
 	}
 	public static void checkBoard(Stone[] point)
 	{
 		int x, y, deps;
-		int[][] libs;
 		for (int j = 0; j < 100; j++)
 		{
-			deps = 0;
+			deps = 0;	
 			for (int i = 0; i < 4; i++)
 			{
-				x = point[j].libs[i][0];
-/*
-				y = point[j].libs[i][1];
+				x = point[j].libs[i][0]; // Collect x value of nth ordered pair array for the lib
+				y = point[j].libs[i][1]; // Collect y value
 				System.out.printf("(%d,%d)",x,y);
-				if (x < 0 || x > 100 || y < 0 || y > 100)
-				{
+				if (x < 0 || x > 9 || y < 0 || y > 9) // If the lib if off the board, it is the edge is is a netural dep
 					deps++;
-				}
-				else if(point[x+y*10].character == 'O' || point[x+y*10].character == '0' )
-				{
+				else if(point[x+y*10].character != '+') //If the lib is an enemy stone, add a dep
 					deps++;
-				}
-				else
-				{
-					point[x+y*10].character = 'E';
-				}
-*/
 			}
-			if (deps > 3)
-			{
+			System.out.printf("______________________________");
+			System.out.printf("dep: %d\n",deps);
+			if (deps == 4) // If 4 dependencies are collected than that stone is captured
 				point[j].character = 'X';
-				deps = 0;	
-			}
 		}
 	}
 }
